@@ -1,0 +1,22 @@
+#!/bin/bash
+
+first_arg=$1
+all_args="$@"
+
+shift
+shifted_args="$@"
+
+if ! [[ $first_arg =~ ^[0-9]+$ ]]; then
+    dir=`find . -maxdepth 1 -type d -path './day*' | tail -n1`
+    nimble_args=$all_args
+else
+    if [ $first_arg -lt 10 ]; then
+        dir="day0$first_arg"
+    else
+        dir="day$first_arg"
+    fi
+
+    nimble_args=$shifted_args
+fi
+
+cd $dir && nimble run $nimble_args
