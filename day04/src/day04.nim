@@ -22,17 +22,9 @@ let ranges = readFile("input")
   .mapIt((parseRange(it[0]), parseRange(it[1])))
 
 block part1:
-  var count = 0
-  for (a, b) in ranges:
-    if overlap(a, b) == min(a.length, b.length):
-      count += 1
-
+  let count = ranges.countIt(overlap(it[0], it[1]) == min(it[0].length, it[1].length))
   echo "Part 1: ", count
 
 block part2:
-  var count = 0
-  for (a, b) in ranges:
-    if overlap(a, b) > 0:
-      count += 1
-
+  let count = ranges.countIt(overlap(it[0], it[1]) > 0)
   echo "Part 2: ", count
