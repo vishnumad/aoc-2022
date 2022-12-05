@@ -1,4 +1,4 @@
-import std/[strutils, sequtils]
+import std/[strutils, strscans, sequtils]
 
 type
   Range = tuple[low, high: int]
@@ -11,20 +11,20 @@ proc overlap(a: Range, b: Range): int =
   let totalLength = a.length + b.length
   return totalLength - spanLength
 
-proc parseRange(literal: string): Range =
-  let range = literal.split('-')
-  return (low: parseInt(range[0]), high: parseInt(range[1]))
+proc parseRanges(line: string): tuple[a: Range, b: Range] =
+  var lowA, highA, lowB, highB = 0
+  discard line.scanf("$i-$i,$i-$i", lowA, highA, lowB, highB)
+  return ((low: lowA, high: highA), (low: lowB, high: highB))
 
 let ranges = readFile("input")
   .strip()
   .splitLines()
-  .mapIt(it.split(','))
-  .mapIt((parseRange(it[0]), parseRange(it[1])))
+  .mapIt(parseRanges(it))
 
 block part1:
-  let count = ranges.countIt(overlap(it[0], it[1]) == min(it[0].length, it[1].length))
+  let count = ranges.countIt(overlap(it.a, it.b) == min(it.a.length, it.b.length))
   echo "Part 1: ", count
 
 block part2:
-  let count = ranges.countIt(overlap(it[0], it[1]) > 0)
+  let count = ranges.countIt(overlap(it.a, it.b) > 0)
   echo "Part 2: ", count
